@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Relatar uma falha de segurança (privado)
+    url: https://github.com/Leitura-Compartilhada/leitura-compartilhada/security/advisories/new
+    about: Vulnerabilidades não devem virar issue pública.

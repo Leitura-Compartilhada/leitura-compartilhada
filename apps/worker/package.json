@@ -1,0 +1,28 @@
+{
+  "name": "@leitura/worker",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "author": "Getulio Vagner",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=../../.env src/main.ts",
+    "build": "tsc --noEmit",
+    "start": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@leitura/db": "workspace:*",
+    "@leitura/shared": "workspace:*",
+    "@leitura/storage": "workspace:*",
+    "drizzle-orm": "^0.45.4",
+    "pg-boss": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

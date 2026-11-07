@@ -1,0 +1,1 @@
+ALTER TABLE "reading_states" ALTER COLUMN "file_hash" SET NOT NULL;

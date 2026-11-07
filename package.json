@@ -1,0 +1,46 @@
+{
+  "name": "leitura-compartilhada",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "author": "Getulio Vagner",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Leitura-Compartilhada/leitura-compartilhada.git"
+  },
+  "packageManager": "pnpm@11.9.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter ./apps/* dev",
+    "dev:web": "pnpm --filter @leitura/web dev",
+    "dev:api": "pnpm --filter @leitura/api dev",
+    "dev:worker": "pnpm --filter @leitura/worker dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck && tsc -p e2e/tsconfig.json",
+    "lint": "biome check . && node scripts/check-file-size.mjs && node scripts/check-architecture.mjs && node scripts/check-docs.mjs",
+    "format": "biome format --write .",
+    "test": "pnpm -r test && node --test scripts/check-file-size.test.mjs scripts/architecture-rules.test.mjs scripts/import-graph.test.mjs scripts/check-docs.test.mjs scripts/e2e-clean.test.mjs scripts/publish-lib.test.mjs",
+    "db:generate": "pnpm --filter @leitura/db generate",
+    "db:migrate": "pnpm --filter @leitura/db migrate",
+    "db:studio": "pnpm --filter @leitura/db studio",
+    "e2e": "playwright test",
+    "map": "node scripts/graphify-map.mjs",
+    "coverage": "node scripts/coverage.mjs",
+    "mutation": "node scripts/mutation.mjs",
+    "dast": "node scripts/dast.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "e2e:clean": "node scripts/e2e-clean.mjs",
+    "publish:public": "node scripts/publish-public.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.3",
+    "@playwright/test": "^1.64.1",
+    "@stryker-mutator/core": "10.1.1",
+    "@stryker-mutator/vitest-runner": "10.1.1",
+    "@types/node": "^24.19.2",
+    "@vitest/coverage-v8": "5.0.5",
+    "typescript": "^7.0.2"
+  }
+}

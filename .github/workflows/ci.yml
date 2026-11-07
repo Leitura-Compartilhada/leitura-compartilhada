@@ -1,0 +1,77 @@
+# Verificações em pull requests e na main.
+# Os testes da API usam um Postgres de verdade (serviço abaixo); o banco leitura_test é criado
+# e migrado pelo setup dos testes.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: leitura
+          POSTGRES_PASSWORD: leitura
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U leitura"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://leitura:leitura@localhost:5432/leitura_test
+    steps:
+      - uses: actions/checkout@v7
+
+      # A versão do pnpm vem do campo packageManager do package.json.
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      # Calibre de verdade para os testes de conversão (worker e E2E). Sem ele esses testes pulam;
+      # a versão do apt é mais antiga que a do desenvolvimento, por isso os testes só afirmam
+      # EPUB válido e texto presente, nunca bytes.
+      - name: Instalar o Calibre
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends calibre
+
+      - run: pnpm install --frozen-lockfile
+
+      # Portão de segurança das dependências: falha com vulnerabilidade alta ou crítica em produção.
+      # As moderadas e as de ferramentas de desenvolvimento ficam registradas em docs/projeto/quality-gate.md.
+      - run: pnpm audit --prod --audit-level=high
+
+      # lint = Biome + tamanho de arquivo + regras de arquitetura (scripts/check-architecture.mjs).
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+      # E2E com o EPUB sintético e um EPUB hostil. Os testes do acervo do usuário (_local/corpus)
+      # são pulados porque a pasta não existe aqui.
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm e2e
+
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7

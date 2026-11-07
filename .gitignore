@@ -1,0 +1,43 @@
+node_modules
+dist
+build
+.turbo
+*.tsbuildinfo
+coverage
+playwright-report
+test-results
+
+# env
+.env
+.env.*
+!.env.example
+
+# arquivos de livros em dev
+storage/*
+!storage/.gitkeep
+
+# anotações pessoais
+_local/
+
+# claude local
+**/.claude/settings.local.json
+
+.DS_Store
+Thumbs.db
+
+# cache do pnpm no CI
+.pnpm-store
+
+# livros: nunca versionar (direitos autorais). Só as fixtures do projeto.
+*.epub
+*.pdf
+!e2e/fixtures/**
+
+# worktrees temporários dos agentes
+.claude/worktrees/
+
+# estado local do Obsidian (o resto de .obsidian pode ir ao git)
+**/.obsidian/workspace*.json
+**/.obsidian/cache
+**/.obsidian/graph.json
+.stryker-tmp

@@ -1,0 +1,63 @@
+{
+  "include": [
+    "apps/",
+    "packages/",
+    "e2e/",
+    "scripts/",
+    "docker/",
+    "docker-compose.yml",
+    ".github/workflows/",
+    ".editorconfig",
+    ".gitattributes",
+    ".gitignore",
+    ".nvmrc",
+    ".env.example",
+    "biome.json",
+    "package.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "playwright.config.ts",
+    "tsconfig.base.json",
+    "LICENSE",
+    "NOTICE",
+    "THIRD_PARTY_NOTICES.md",
+    "CITATION.cff",
+    "SECURITY.md",
+    "CONTRIBUTING.md"
+  ],
+  "never": [
+    "CLAUDE.md",
+    ".claude/",
+    "skills-lock.json",
+    "subagentes/",
+    "docs/",
+    "_local/",
+    "storage/",
+    "public-template/",
+    ".github/dependabot.yml",
+    ".env",
+    "test-results/",
+    "playwright-report/",
+    "node_modules/"
+  ],
+  "neverAnywhere": [
+    "CLAUDE.md",
+    "AGENTS.md",
+    ".claude",
+    "subagentes",
+    "_local",
+    "docs",
+    ".obsidian",
+    "node_modules",
+    "test-results",
+    "playwright-report"
+  ],
+  "approvedBinaries": ["e2e/fixtures/sintetico.epub"],
+  "map": {
+    "public-template/README.md": "README.md",
+    "public-template/docs/ARQUITETURA.md": "docs/ARQUITETURA.md",
+    "public-template/.github/ISSUE_TEMPLATE/bug.md": ".github/ISSUE_TEMPLATE/bug.md",
+    "public-template/.github/ISSUE_TEMPLATE/sugestao.md": ".github/ISSUE_TEMPLATE/sugestao.md",
+    "public-template/.github/ISSUE_TEMPLATE/config.yml": ".github/ISSUE_TEMPLATE/config.yml"
+  }
+}

@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "Se você usar este software, cite-o assim."
+title: "Leitura Compartilhada"
+abstract: "Leitor de EPUB (PWA) que guarda a posição exata de leitura (EPUB CFI) e a sincroniza entre dispositivos, com estante, importação em lote e conversão de outros formatos para EPUB."
+type: software
+authors:
+  - name: "Getulio Vagner"
+repository-code: "https://github.com/Leitura-Compartilhada/leitura-compartilhada"
+license: AGPL-3.0-or-later
+date-released: "2026-11-05"
+keywords:
+  - epub
+  - ebook-reader
+  - pwa
+  - reading-position
+  - self-hosted
