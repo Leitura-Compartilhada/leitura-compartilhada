@@ -21,7 +21,7 @@
     "typecheck": "pnpm -r typecheck && tsc -p e2e/tsconfig.json",
     "lint": "biome check . && node scripts/check-file-size.mjs && node scripts/check-architecture.mjs && node scripts/check-docs.mjs",
     "format": "biome format --write .",
-    "test": "pnpm -r test && node --test scripts/check-file-size.test.mjs scripts/architecture-rules.test.mjs scripts/import-graph.test.mjs scripts/check-docs.test.mjs scripts/e2e-clean.test.mjs scripts/publish-lib.test.mjs",
+    "test": "pnpm -r test && node --test scripts/check-file-size.test.mjs scripts/architecture-rules.test.mjs scripts/import-graph.test.mjs scripts/check-docs.test.mjs scripts/e2e-clean.test.mjs scripts/publish-lib.test.mjs scripts/juri-lib.test.mjs",
     "db:generate": "pnpm --filter @leitura/db generate",
     "db:migrate": "pnpm --filter @leitura/db migrate",
     "db:studio": "pnpm --filter @leitura/db studio",
@@ -32,7 +32,9 @@
     "dast": "node scripts/dast.mjs",
     "icons": "node scripts/make-icons.mjs",
     "e2e:clean": "node scripts/e2e-clean.mjs",
-    "publish:public": "node scripts/publish-public.mjs"
+    "publish:public": "node scripts/publish-public.mjs",
+    "juri:server": "node scripts/juri-server.mjs",
+    "juri:browser": "node scripts/juri-browser.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3",

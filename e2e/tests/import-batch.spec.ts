@@ -46,7 +46,7 @@ test.describe("importar em lote", () => {
     await row(page, "Lote Dois.epub").getByRole("checkbox").uncheck();
     await dialog(page).getByRole("button", { name: "Importar 1 livro" }).click();
     await expect(dialog(page)).toContainText("1 de 1 enviados");
-    await dialog(page).getByRole("button", { name: "Fechar" }).click();
+    await dialog(page).getByRole("button", { name: "Fechar", exact: true }).click();
     await expect(card(page, "Lote Um")).toBeVisible();
     await expect(card(page, "Lote Dois")).toHaveCount(0);
 
@@ -57,7 +57,7 @@ test.describe("importar em lote", () => {
     await expect(row(page, "Lote Dois.epub").getByRole("checkbox")).toBeChecked();
     await dialog(page).getByRole("button", { name: "Importar 1 livro" }).click();
     await expect(dialog(page)).toContainText("1 de 1 enviados");
-    await dialog(page).getByRole("button", { name: "Fechar" }).click();
+    await dialog(page).getByRole("button", { name: "Fechar", exact: true }).click();
     await expect(card(page, "Lote Dois")).toBeVisible();
 
     // Tudo marcado de novo e nada novo: o botão fica desabilitado.
@@ -86,7 +86,7 @@ test.describe("importar em lote", () => {
 
     await dialog(page).getByRole("button", { name: "Importar 2 livros" }).click();
     await expect(dialog(page)).toContainText("2 de 2 enviados");
-    await dialog(page).getByRole("button", { name: "Fechar" }).click();
+    await dialog(page).getByRole("button", { name: "Fechar", exact: true }).click();
     await expect(card(page, "Solto")).toBeVisible();
     await expect(card(page, "Volume 1")).toBeVisible();
     desktop.watcher.assertClean();

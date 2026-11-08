@@ -107,3 +107,36 @@ test("filtro por tag e por status se combinam", async ({ desktop, baseURL }, tes
   await expect(card(page, "Fantasia Lida")).toBeVisible();
   desktop.watcher.assertClean();
 });
+
+test("buscar por título ou autor filtra sem acento, junto dos outros filtros, e dá para limpar", async ({
+  desktop,
+  baseURL,
+}, testInfo) => {
+  const { page } = desktop;
+  await seedLibrary(desktop, baseURL ?? "", testInfo, [
+    { title: "O Pequeno Príncipe", patch: { authors: ["Antoine de Saint-Exupéry"] } },
+    { title: "Dom Casmurro", patch: { authors: ["Machado de Assis"], status: "read" } },
+    { title: "Memórias Póstumas", patch: { authors: ["Machado de Assis"] } },
+  ]);
+  await page.goto("/");
+  await expect(page.getByRole("listitem")).toHaveCount(3);
+
+  const search = page.getByRole("searchbox", { name: "Buscar por título ou autor" });
+  await search.fill("principe");
+  await expect(page.getByRole("listitem")).toHaveCount(1);
+  await expect(card(page, "O Pequeno Príncipe")).toBeVisible();
+
+  await search.fill("machado");
+  await expect(page.getByRole("listitem")).toHaveCount(2);
+  // A busca soma com o status: só o Dom Casmurro está "Lido".
+  await page.getByRole("button", { name: /^Lido/ }).click();
+  await expect(page.getByRole("listitem")).toHaveCount(1);
+  await expect(card(page, "Dom Casmurro")).toBeVisible();
+
+  await search.fill("nada disso existe");
+  await expect(page.getByText("Nenhum livro com esses filtros.")).toBeVisible();
+  await page.getByRole("button", { name: "Limpar filtros" }).first().click();
+  await expect(search).toHaveValue("");
+  await expect(page.getByRole("listitem")).toHaveCount(3);
+  desktop.watcher.assertClean();
+});

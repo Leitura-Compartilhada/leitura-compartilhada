@@ -1,6 +1,7 @@
 import type { Shelf } from "@leitura/shared";
-import { Layers, Library, List, X } from "lucide-react";
+import { Layers, Library, List, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -41,6 +42,20 @@ export function LibraryFilters({
 }: Props) {
   return (
     <div className="flex flex-col gap-3">
+      <div className="relative">
+        <Search
+          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+          aria-hidden="true"
+        />
+        <Input
+          type="search"
+          value={filters.query}
+          onChange={(event) => onChange({ ...filters, query: event.target.value })}
+          placeholder="Buscar por título, autor ou série"
+          aria-label="Buscar por título ou autor"
+          className="pl-9"
+        />
+      </div>
       <fieldset className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0">
         <legend className="sr-only">Filtrar por status</legend>
         {[ALL, ...STATUS_ORDER].map((status) => {

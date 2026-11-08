@@ -21,8 +21,8 @@ export function ThemeToggle() {
       size="sm"
       data-testid="theme-toggle"
       data-theme-choice={choice}
-      aria-label={`Tema: ${THEME_LABELS[choice]}. Mudar para ${THEME_LABELS[next]}`}
-      title={`Tema: ${THEME_LABELS[choice]}`}
+      aria-label={`Tema: ${THEME_LABELS[choice]}`}
+      title={`Tema: ${THEME_LABELS[choice]}. Clique para mudar para ${THEME_LABELS[next]}`}
       onClick={() => setThemeChoice(next)}
     >
       <Icon className="size-4" aria-hidden="true" />

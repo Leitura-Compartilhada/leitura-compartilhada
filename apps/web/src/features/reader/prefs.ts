@@ -26,9 +26,9 @@ export type ReaderWidth = (typeof WIDTH_CHOICES)[number];
 
 /** Margem lateral: fração da largura (em %, o `gap` do foliate). */
 export const MARGIN_CHOICES = [
-  { label: "Estreita", value: 3 },
-  { label: "Média", value: 7 },
-  { label: "Larga", value: 12 },
+  { label: "Pequena", value: 3 },
+  { label: "Normal", value: 7 },
+  { label: "Grande", value: 12 },
 ] as const;
 export const MIN_MARGIN = 0;
 export const MAX_MARGIN = 20;

@@ -21,19 +21,44 @@ export type Filters = {
   status: ReadingStatus | typeof ALL;
   shelfId: string;
   tag: string;
+  /** Texto buscado no título, nos autores e na série. Vazio = sem busca. */
+  query: string;
 };
 
-export const NO_FILTERS: Filters = { status: ALL, shelfId: ALL, tag: ALL };
+export const NO_FILTERS: Filters = { status: ALL, shelfId: ALL, tag: ALL, query: "" };
+
+/** Minúsculas e sem acentos: "Sao" acha "São". */
+export function normalizeSearch(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function matchesQuery(book: Book, query: string): boolean {
+  const wanted = normalizeSearch(query);
+  if (wanted === "") return true;
+  return [book.title, ...book.authors, book.series ?? ""].some((field) =>
+    normalizeSearch(field).includes(wanted),
+  );
+}
 
 export function hasActiveFilter(filters: Filters): boolean {
-  return filters.status !== ALL || filters.shelfId !== ALL || filters.tag !== ALL;
+  return (
+    filters.status !== ALL ||
+    filters.shelfId !== ALL ||
+    filters.tag !== ALL ||
+    normalizeSearch(filters.query) !== ""
+  );
 }
 
 function matches(book: Book, filters: Filters, ignoreStatus: boolean): boolean {
   if (!ignoreStatus && filters.status !== ALL && book.status !== filters.status) return false;
   if (filters.shelfId !== ALL && !book.shelfIds.includes(filters.shelfId)) return false;
   if (filters.tag !== ALL && !book.tags.includes(filters.tag)) return false;
-  return true;
+  return matchesQuery(book, filters.query);
 }
 
 export function filterBooks(books: readonly Book[], filters: Filters): Book[] {

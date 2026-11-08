@@ -7,6 +7,7 @@ import { BookList } from "./BookList";
 import { ConversionsPanel } from "./conversions/ConversionsPanel";
 import { DeleteBookDialog } from "./DeleteBookDialog";
 import { EditBookDialog } from "./EditBookDialog";
+import { InstallHint } from "./InstallHint";
 import { ImportDialog } from "./import/ImportDialog";
 import { useImport } from "./import/use-import";
 import { LibraryFilters } from "./LibraryFilters";
@@ -65,6 +66,7 @@ export function LibraryPage() {
     <section className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-semibold">Minha estante</h1>
+        <InstallHint />
         <UploadControl
           onPick={(files) => {
             const [only] = files;
@@ -113,7 +115,7 @@ export function LibraryPage() {
         <div className="rounded-lg border border-dashed p-8 text-center">
           <p className="font-medium">Sua estante está vazia.</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Use “Adicionar livro” para enviar um EPUB, ou um MOBI, FB2, DOCX, TXT, Markdown ou HTML
+            Use “Adicionar livros” para enviar um EPUB, ou um MOBI, FB2, DOCX, TXT, Markdown ou HTML
             para converter.
           </p>
         </div>

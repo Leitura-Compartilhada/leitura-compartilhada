@@ -52,12 +52,14 @@ describe("filtros", () => {
     expect(filterBooks(all, { ...NO_FILTERS, status: "read" })).toEqual([b, c]);
     expect(filterBooks(all, { ...NO_FILTERS, shelfId: "s2" })).toEqual([b]);
     expect(filterBooks(all, { ...NO_FILTERS, tag: "fantasia" })).toEqual([a, b]);
-    expect(filterBooks(all, { status: "read", shelfId: "s1", tag: "fantasia" })).toEqual([b]);
+    expect(
+      filterBooks(all, { ...NO_FILTERS, status: "read", shelfId: "s1", tag: "fantasia" }),
+    ).toEqual([b]);
     expect(hasActiveFilter({ ...NO_FILTERS, tag: "x" })).toBe(true);
   });
 
   it("conta por status respeitando estante e tag, mas não o próprio status", () => {
-    const counts = countByStatus(all, { status: "reading", shelfId: "s1", tag: ALL });
+    const counts = countByStatus(all, { ...NO_FILTERS, status: "reading", shelfId: "s1" });
     expect(counts).toEqual({
       [ALL]: 2,
       want_to_read: 0,
@@ -65,6 +67,24 @@ describe("filtros", () => {
       read: 1,
       abandoned: 0,
     });
+  });
+
+  it("busca por título, autor ou série, sem acento nem maiúscula, e combina com os outros filtros", () => {
+    const x = book({ title: "O Pequeno Príncipe", authors: ["Antoine de Saint-Exupéry"] });
+    const y = book({ title: "Dom Casmurro", authors: ["Machado de Assis"], status: "read" });
+    const z = book({ title: "Volume 1", series: "Crônicas de São Paulo", status: "read" });
+    const list = [x, y, z];
+    expect(filterBooks(list, { ...NO_FILTERS, query: "principe" })).toEqual([x]);
+    expect(filterBooks(list, { ...NO_FILTERS, query: "  MACHADO  " })).toEqual([y]);
+    expect(filterBooks(list, { ...NO_FILTERS, query: "cronicas sao" })).toEqual([]);
+    expect(filterBooks(list, { ...NO_FILTERS, query: "são paulo" })).toEqual([z]);
+    expect(filterBooks(list, { ...NO_FILTERS, query: "de", status: "read" })).toEqual([y, z]);
+    expect(filterBooks(list, { ...NO_FILTERS, query: "   " })).toEqual(list);
+    expect(hasActiveFilter({ ...NO_FILTERS, query: "x" })).toBe(true);
+    expect(hasActiveFilter({ ...NO_FILTERS, query: "  " })).toBe(false);
+    // os contadores por status seguem a busca
+    expect(countByStatus(list, { ...NO_FILTERS, query: "de" })[ALL]).toBe(3);
+    expect(countByStatus(list, { ...NO_FILTERS, query: "principe" })[ALL]).toBe(1);
   });
 
   it("junta as tags sem repetir, em ordem alfabética", () => {

@@ -5,7 +5,7 @@ import { Cover } from "./Cover";
 import { StatusBadge } from "./StatusBadge";
 
 function formatPercentage(percentage: number | null): string {
-  if (percentage === null) return "Não iniciado";
+  if (percentage === null) return "Ainda não aberto";
   return `${Math.round(percentage * 100)}% lido`;
 }
 

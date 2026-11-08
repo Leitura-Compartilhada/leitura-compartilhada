@@ -177,7 +177,7 @@ function EditForm({
           </SelectContent>
         </Select>
       </Field>
-      <Field id={id("tags")} label="Tags" error={errors.tags}>
+      <Field id={id("tags")} label="Tags" hint="Separe com vírgula ou Enter." error={errors.tags}>
         <TagInput
           id={id("tags")}
           tags={form.tags}

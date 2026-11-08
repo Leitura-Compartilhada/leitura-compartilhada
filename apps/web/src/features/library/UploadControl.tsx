@@ -16,7 +16,7 @@ type Props = {
 
 const ACCEPT = `.epub,application/epub+zip,${CONVERTIBLE_ACCEPT}`;
 
-/** Botão "Adicionar livro" e as mensagens do envio. */
+/** Botão "Adicionar livros" e as mensagens do envio. */
 export function UploadControl({ onPick, onPickFolder, isPending, error, success }: Props) {
   const fileInput = useRef<HTMLInputElement>(null);
   const folderInput = useRef<HTMLInputElement>(null);
@@ -27,6 +27,8 @@ export function UploadControl({ onPick, onPickFolder, isPending, error, success 
     if (files.length > 0) deliver(files);
   }
 
+  // Os campos de arquivo ficam escondidos (os botões abaixo os acionam). `aria-hidden` evita que leitor de
+  // tela e robôs os anunciem como botões extras ("Escolher pasta" aparecia até no celular, sem botão).
   return (
     <>
       <input
@@ -36,6 +38,7 @@ export function UploadControl({ onPick, onPickFolder, isPending, error, success 
         multiple
         className="sr-only"
         tabIndex={-1}
+        aria-hidden="true"
         aria-label="Escolher arquivo de livro"
         onChange={(event) => pickFrom(event, onPick)}
       />
@@ -46,6 +49,7 @@ export function UploadControl({ onPick, onPickFolder, isPending, error, success 
         webkitdirectory=""
         className="sr-only"
         tabIndex={-1}
+        aria-hidden="true"
         aria-label="Escolher pasta de livros"
         onChange={(event) => pickFrom(event, onPickFolder)}
       />

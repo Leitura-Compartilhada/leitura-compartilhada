@@ -36,7 +36,7 @@ export function ConversionsPanel() {
             {jobs.map((job) => (
               <li key={job.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2">
                 <StatusIcon status={job.status} />
-                <span className="min-w-0 flex-1 truncate font-medium" title={job.filename}>
+                <span className="min-w-0 flex-1 break-words font-medium" title={job.filename}>
                   {job.filename}
                 </span>
                 <span className="text-xs uppercase text-muted-foreground">{job.sourceFormat}</span>

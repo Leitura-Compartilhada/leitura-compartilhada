@@ -21,6 +21,10 @@ parágrafo (EPUB CFI), e a **sincroniza entre o celular e o computador** pela su
   (sem DRM), numa fila separada.
 - **PWA instalável**, com tema claro e escuro em todo o app.
 
+## Instalar como app
+
+No Chrome, no Edge e no Android aparece o botão **Instalar app** na estante. No iPhone e no iPad, toque em Compartilhar e depois em “Adicionar à Tela de Início”. Instalado, o app abre sem a barra do navegador.
+
 ## Como a posição é guardada
 
 A posição é gravada como **CFI** (um endereço dentro do HTML do livro), junto com o percentual, um trecho

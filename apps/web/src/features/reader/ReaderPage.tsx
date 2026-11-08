@@ -8,6 +8,7 @@ import { describeApiError, isUnauthenticated } from "@/lib/messages";
 import { BOOKS_QUERY_KEY } from "@/lib/queries";
 import { useResolvedTheme } from "@/lib/theme";
 import type { FoliateTocItem } from "@/vendor/foliate-js/view.js";
+import { headerTitle } from "./header-title";
 import { openReader, type ReaderHandle, type ReaderLocation } from "./open-reader";
 import { loadPrefs, PALETTES, type ReaderPrefs, resolveReaderTheme, savePrefs } from "./prefs";
 import { SettingsPanel } from "./SettingsPanel";
@@ -76,7 +77,11 @@ export function ReaderPage() {
       signal: controller.signal,
       onLocation: setLocation,
       onCenterTap: () => setChromeVisible((visible) => !visible),
-      onAutoScrollChange: setAutoScrolling,
+      onAutoScrollChange: (running) => {
+        setAutoScrolling(running);
+        // A rolagem esconde as barras ao começar; ao parar (botão, toque, rolar ou tecla) elas voltam.
+        if (!running) setChromeVisible(true);
+      },
     })
       .then((handle) => {
         if (!handle) return null;
@@ -172,7 +177,10 @@ export function ReaderPage() {
         </div>
       ) : null}
 
+      {/* `inert` tira as barras escondidas do foco e da árvore de acessibilidade: antes, leitor de tela e
+          teclado alcançavam botões invisíveis que o clique não alcançava. */}
       <header
+        inert={!(chromeVisible || fatal)}
         className={`absolute inset-x-0 top-0 flex h-12 items-center gap-1 border-b border-current/10 px-2 transition-opacity ${chromeVisible || fatal ? "opacity-100" : "pointer-events-none opacity-0"}`}
         style={barStyle}
       >
@@ -184,7 +192,7 @@ export function ReaderPage() {
           <ArrowLeft className="size-5" aria-hidden="true" />
         </Link>
         <h1 className="min-w-0 flex-1 truncate text-center text-sm font-medium">
-          {location.chapter ?? title}
+          {headerTitle(location.chapter, title, toc.length)}
         </h1>
         <Button
           variant="ghost"
@@ -192,7 +200,6 @@ export function ReaderPage() {
           aria-label={
             autoScrolling ? "Pausar a rolagem automática" : "Iniciar a rolagem automática"
           }
-          aria-pressed={autoScrolling}
           disabled={status !== "ready"}
           onClick={() => {
             handleRef.current?.setAutoScroll(!autoScrolling);
@@ -228,6 +235,7 @@ export function ReaderPage() {
       </header>
 
       <footer
+        inert={!chromeVisible}
         className={`absolute inset-x-0 bottom-0 flex h-12 items-center gap-3 border-t border-current/10 px-4 transition-opacity ${chromeVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}
         style={barStyle}
       >
@@ -249,6 +257,20 @@ export function ReaderPage() {
           {scrub === null ? percent : Math.round((scrub / PROGRESS_SLIDER_MAX) * 100)}%
         </span>
       </footer>
+
+      {/* Com as barras escondidas, a rolagem precisa de uma saída à vista: tocar no texto também pausa. */}
+      {autoScrolling && !chromeVisible ? (
+        <Button
+          variant="outline"
+          size="sm"
+          className="absolute right-3 bottom-3 opacity-80 hover:opacity-100"
+          style={barStyle}
+          aria-label="Parar a rolagem automática"
+          onClick={() => handleRef.current?.setAutoScroll(false)}
+        >
+          <Pause className="size-5" aria-hidden="true" />
+        </Button>
+      ) : null}
 
       {panel ? (
         <div

@@ -137,4 +137,52 @@ test.describe("rolagem automática", () => {
       "false",
     );
   });
+
+  for (const device of ["desktop", "mobile"] as const) {
+    test(`com as barras escondidas há um botão à vista que pausa e devolve as barras (${device})`, async ({
+      desktop,
+      mobile,
+      baseURL,
+    }, testInfo) => {
+      const d = device === "desktop" ? desktop : mobile;
+      await seedReaderPrefs(d.page, { flow: "scrolled", autoScrollSpeed: 10 });
+      const { book } = await uploadGeneratedBook(d, baseURL ?? "", testInfo);
+      await openBook(d.page, book.id);
+      const header = d.page.locator("header");
+      const floatingPause = d.page.locator(
+        "[data-reader-status] > button[aria-label='Parar a rolagem automática']",
+      );
+
+      await d.page.getByRole("button", PLAY).click();
+      // Barras escondidas: fora do foco e da árvore de acessibilidade (`inert`), e a saída está à vista.
+      await expect(header).toHaveJSProperty("inert", true);
+      await expect(d.page.locator("footer")).toHaveJSProperty("inert", true);
+      await expect(floatingPause).toBeVisible();
+
+      await floatingPause.click();
+      await expect(d.page.locator("[data-reader-autoscroll]")).toHaveAttribute(
+        "data-reader-autoscroll",
+        "false",
+      );
+      // Ao parar, as barras voltam e a navegação responde.
+      await expect(header).toHaveJSProperty("inert", false);
+      await expect(floatingPause).toHaveCount(0);
+      await d.page.getByRole("link", { name: "Voltar à estante" }).click();
+      await expect(d.page.getByRole("heading", { name: "Minha estante" })).toBeVisible();
+    });
+  }
+
+  test("pausar rolando ou com a tecla também devolve as barras", async ({
+    desktop,
+    baseURL,
+  }, testInfo) => {
+    await seedReaderPrefs(desktop.page, { flow: "scrolled", autoScrollSpeed: 10 });
+    const { book } = await uploadGeneratedBook(desktop, baseURL ?? "", testInfo);
+    await openBook(desktop.page, book.id);
+    await desktop.page.getByRole("button", PLAY).click();
+    await expect(desktop.page.locator("header")).toHaveJSProperty("inert", true);
+    await desktop.page.keyboard.press("Shift");
+    await expect(desktop.page.locator("header")).toHaveJSProperty("inert", false);
+    await expect(desktop.page.getByRole("button", PLAY)).toBeVisible();
+  });
 });
